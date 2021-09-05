@@ -1,0 +1,145 @@
+CARRAL, ARMANDO MARCELO
+
+EJERCICIO 1:
+Implementá el TAD Queue of T visto en clase(*), utilizando la idea de listas enlazadas con punteros a nodos, de manera tal que todas las operaciones sean de orden constante. Para ello, podés representar la cola mediante dos punteros: uno al primer elemento y otro al último.
+
+spec Queue of T where 
+  constructors 
+fun empty_queue() ret q : Queue of T 
+{- crea una cola vacía. -} 
+
+proc enqueue(in/out q : Queue of T, in e : T) 
+{- agrega el elemento e al final de la cola q. -}
+
+  operations 
+fun is_empty_queue(q : Queue of T) ret b : bool 
+{- Devuelve True si la cola es vacía -} 
+
+fun first(q : Queue of T) ret e : T
+{- Devuelve el elemento que se encuentra al comienzo de q. -} 
+{- PRE: not is_empty_queue(q) -} 
+
+proc dequeue(in/out q : Queue of T) 
+{- Elimina el elemento que se encuentra al comienzo de q. -} 
+{- PRE: not is_empty_queue(q) -}
+
+
+implement Queue of T where 
+   type Node of T = tuple 
+		  elem : T
+ 		  next : pointer to (Node of T)
+                    end tuple  
+  
+   type Queue of T = tuple
+  	          start : pointer to (Node of T)
+		  finish: pointer to (Node of T)
+                    end tuple
+   type Queue of T = pointer to (Queue of T)
+
+   fun empty_queue() ret q : Queue of T
+ 	q->start = null
+	q->finish = null
+   end fun
+   {- crea una cola vacía. -} 
+
+   proc enqueue(in/out q: Queue of T, in e : T)
+	var p: pointer to (Node of T)
+	alloc(p)
+	p->elem := e
+	p->next := null
+	{- si está vacío entonces ambos apuntan al primer elemento. -}
+	if q->finish = null ∧ q->start = null then
+	   q->finish := p
+	   q->start  := p
+ 	{- caso contrario (q->star)->next agrega el elemento, es decir, apunta a p. -}
+	else
+	   (q->star)->next := p
+ 	fi
+   end proc
+   {- agrega el elemento e al final de la cola q. -}
+
+   fun is_empty_queue(q: Queue of T) ret b : bool
+	b := q->start = null ∧ q->finish = null
+   end fun 
+   {- Devuelve True si la cola es vacía -} 
+
+   fun first(q: Queue of T) ret e : T
+	e := (q->finish)->elem
+   end fun
+   {- Devuelve el elemento que se encuentra al comienzo de la cola. -} 
+   {- PRE: not is_empty_queue(q) -} 
+
+   proc dequeue(in/out q : Queue of T)
+	var p: pointer to (Node of T)
+ 	if q->finish = q->start then
+ 	   q->finish := null
+ 	   q->start := null
+ 	else
+ 	   p := q->finish
+ 	   q->finish := (q->finish)->next
+ 	   free(p)
+ 	fi
+   end proc 
+   {- Elimina el elemento que se encuentra al comienzo de cola. -} 
+   {- PRE: not is_empty_queue(q) -}
+
+   fun copy_queue(q1: Queue of T) ret q2: Queue of T
+	var p: pointer to (Node of T)
+	p = q.finish
+	while p != null do
+	   q2 = p
+	   p = p->next
+	od
+   end fun
+   {- Devuelve la copia de q1. -}
+
+   proc destroy_queue(in/out q: Queue of T)
+	var p: pointer to (Node of T)
+	p := q->finish
+	while p->next != null do
+	   (q->finish)->next := q->finish
+	   free(p)
+	   p := q->finish
+	od
+	q->finish := null
+	q->start := null
+   end proc
+   {-Libera memoria. -}
+
+EJERCICIO 2:
+Se pide: 
+Completá la implementación del algoritmo ExtremeKingfisherGame en la cual deberás utilizar los TADs Player y Queue of Player sin romper la abstracción. Sólo se pueden utilizar operaciones que estén especificadas en los respectivos TADs.
+
+fun ExtremeKingfisherGame(playersNames: array[1..N] of String, lives: Nat, k: Nat) ret winner: String 
+   var q: Queue of Player
+   var new_player : Player
+   var player_elimity : String 
+   var cant_players: Nat
+   var i: nat
+   cant_players := 0
+   for i := 1 to N do  					    {- cargo los jugadores en la cola q. -}
+      new_player := createrPlayer(playersNames[i], lives)   {- new_player := createrPlayer(“Armando”, h) -}
+      enqueue(q, new_player)
+      cant_players := cant_players + 1
+   od
+   while cant_players != 1 od                               {- que pare hasta que quede el último jugador. -}
+      i := 0
+      while i < k ∧ k != 0 do {- me aseguró que k = 0 no ingrese. -}
+         new_player := first(q)
+	 deque(q,first(q))
+	 enqueue(q, new_player)
+	 i := i + 1
+      od
+      loselife(first(q))
+      if !isAlive(first(q)) then                            {-Si tiene una vida entonces se elimina al jugador. -}
+         player_eliminity := getName(first(q))              {- jugador eliminado. -}
+         dequeue(q)	                                    {- elimina al primer jugador de la cola -}
+	 cant_players := cant_players - 1
+      else
+	 skip
+      fi
+   od
+   winner := getName(first(q))
+   destroy(q)
+end fun
+

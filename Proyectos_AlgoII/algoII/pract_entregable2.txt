@@ -1,0 +1,55 @@
+Trabajo Entregable 2:
+
+Datos:
+N días de viajes.
+cada dia/noche “i” estará en una ciudad Ci.
+contamos con M pesos total del presupuesto para gastar en alojamiento.
+para cada ciudad conocemos el costo Ki por noche del único hotel que tiene.
+Cada noche i podemos elegir entre dormir en: * el hotel de la ciudad ⇒ cuesta Ki,
+									         * o dormir en una carpa ⇒ cuesta 0.
+Indicar en qué ciudades dormiré en el hotel, tal que el monto total gastado en alojamiento en los N días
+no supere el presupuesto M, minimizando la cantidad de noches que dormís en la carpa.
+
+( ciudades a dormir en hotel ⇒ (ΣKi(en alojamientos a dormir) ≤ M(monto a gastar) ) ⇒ cuantas veces dormir en la carpa.
+
+a) Criterio de selección: 
+   Seleccionar las noche ‘i’ que dormiré en hoteles tal que ΣKi sea menor o igual a M y que también implique dormir pocas noches en la carpa.
+
+b) Estructuras de datos:
+
+   type hoteles = tuple
+					   ciudad: Nat
+					   costo_hotel: Nat
+				  end tuple
+
+c) Explicación del algoritmo:
+
+El algoritmo hace una copia de la lista, luego el algoritmo trabaja con dicha copia, y ordena los costo Ki (para dormir en el hotel) de menor a mayor con el metodo de ordenación quick_sort, luego irá sumando de a uno los costo y verificará si la suma parcial de los costos es menor o igual al presupuesto M a gastar, si se cumple esta condición  de que es menor o igual entonces se agregara las ciudades en la cual dormiremos en el hotel en el conjunto de solución. 
+
+d) Implementación del algoritmo:
+
+fun dormir(h: List of hoteles, M: Nat) ret D: List of hoteles    
+    var copy_h: List of hoteles
+    var sum_costos: Nat
+    var c: hoteles
+    sum_costos := 0
+    D := empty_list() 
+    copy_h := copy_list(h)
+
+{- Ordeno de menor a mayor los costos de aux_hoteles -}
+	quick_sort(copy_h)
+{- Selecciono los costos que van a integrar la solución -}
+	for i:=1 to N do
+		c := index(copy_h, i)
+		sum_costo := sum_costo + c.costo_hotel
+		if sum_costo < M then
+			addl(D, c.cuidad)
+		else
+			skip
+		fi
+	od
+	destroy(copy_h)
+end fun
+
+EJEMPLO: 
+N = 5, Ci ={ c1, c2, c3, c4, c5,c6 }, M = 1000, Ki = {120,730,400,200,150,310 }, entonces 120+400+200+150=870, dormir_carpa=2 noche

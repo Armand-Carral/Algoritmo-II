@@ -1,0 +1,275 @@
+e = 12, tree->elme = 37, entonces
+
+l95  -> e = tree->elem = false
+l109 -> e < tree->elem = true -> A 
+l112 -> e > tree->elem = false
+
+A:
+e = 12, tree->elme = 7, entonces
+
+l95  -> e = tree->elem = false
+l109 -> e < tree->elem = false 
+l112 -> e > tree->elem = true -> B
+
+B:
+e = 12, tree->elme = 12, entonces
+
+l95  -> e = tree->elem = true -> C (aqui tengo que eliminar, luego busco el max. de la izq o min de la derecha.)
+l109 -> e < tree->elem = false 
+l112 -> e > tree->elem = false
+
+C:
+l96 -> tree->left = NULL -> false
+
+
+=============================================
+e = 37
+
+l94  37 = e == true
+l95  false {- porque sus dos hijos no son nulos. -}
+l99  false
+l102 false
+*Ahora tengo tengo que buscar el maximo del subarbol izquierdo y colocarlo en el lugar del 37.
+tree->elem = abb_max(tree->left) --> {tree->elem = 14}
+*Ahora ahora tengo que llegar hasta ese valor eliminarlo entonces hago devuelta recusividad
+ y ahora si se va aplicar la linea 95.  
+
+==========================================================================
+
+Estoy parado en 37, e = 7, entonces					{- raiz 37, e = 7 -}
+l94  37 == 7 -> false
+l108  7 < 37 -> true => A						{ 7 < 37 }
+l111  7 > 37 -> False
+
+A: ahora estoy parado en 7, e = 7					{ raiz = 7, e = 7 }
+l94  7 == 7 -> true							{ raiz == e = true }
+l95  tree->left == NULL && tree->rght == NULL --> false			{ raiz,lft y raiz.rgt == NULL -> false }
+l99  tree->left == NULL --> false					{ raiz.left != NULL }
+l102 tree->rght == NULL --> false					{ raiz.rgt  != NULL }
+*Ahora busco el maximo del subarbol izquierdo, que vendria ser el 5	
+l105 tree->elem = abb_max(tree->left) = 5				{ raiz = max(raiz.lft) = 5 }
+l106 tree = abb_remove(tree->left, 5);					
+*Ahora estoy parado en tree->elem = 5 y e = 5;				{ raiz = 5, e = 5 }
+l94 5 == 5 -> true							{ raiz == e = true }
+l95  tree->left == NULL && tree->rght == NULL --> false			{ raiz,lft y raiz.rgt == NULL -> false }
+l99  tree->left == NULL --> false					{ raiz.lft != NULL }
+l102 tree->rght == NULL --> false					{ raiz.rgt != NULL}
+l105 tree->elem = 1							{ raiz = max(raiz.lft) = 1}
+l106 tree = abb_remove(tree->left, 1)
+*Ahora estoy para en tree->elem = 1 y e = 1;				{ raiz = 1 , e = 1 }
+l94 1 == 1 -> true							{ raiz == e = true }
+l95  tree->left == NULL && tree->rght == NULL --> true			{ raiz,lft y raiz.rgt == NULL -> true }
+l96  free(tree)								{ libero memoria }
+l97  tree = NULL							{ tree -> NULL }
+
+==================================================================================
+
+Estoy parado en raiz 37, e = 37,  tree.left: 7,  tree.rgt: 25
+l94  raiz == e = true
+l95  tree.lft y tree.rgt == NULL -> false
+l99  tree.left == NULL -> false
+l102 tree.rgt == NULL -> false
+l106 raiz = abb_max(tree.lft) = 14
+l107 tree = abb_remove(tree.lef, 14)
+*Ahora estoy parado en raiz 7, e = 14,  tree.lft: 5,  tree.rgt = 12 
+l94  raiz == e = false
+l110 e < raiz = false
+l113 e > raiz = true  -> INGRESO A SUBARBOL DERECHO
+*Ahora me paro en raiz 12, e = 14, tree.lft: 9, tree.rgt = 14
+l94  raiz == e = false
+l110 e < raiz = false
+l113 e > raiz = true -> INGRESO A SUBARBOL DERECHO
+*Ahora me paro en raiz 14, e = 14, tree.lft: NULL, tree.rgt: NULL 
+l94  raiz == e = true
+l95  tree.lft y tree.rgt == NULL -> true
+l96  free(tree)
+l97  tree = NULL
+Fin
+
+======================================================
+
+Estoy en raiz 37, e = 55, tree.lft: 7, tree.rgt: 55
+l94  raiz == e = false
+l110 raiz > e =  false
+l113 raiz < e = true -> INGRESO AL SUBARBOL DERECHO
+*Ahora, estoy en raiz 55, e = 55, tree.lft: 49, tree.rgt: 80
+l94  raiz == e = true
+l95  tree.lft y tree.rgt == NULL -> false
+l99  tree.lft == NULL -> false
+l102 tree.rgt == NULL -> false
+l106 raiz = abb_max(tree->lft) = 51
+l107 tree = abb_revome(tree->lft, 51)
+*Ahora estoy en raiz 49, e = 51, tree.lft: 47, tree.rgt: 51
+l94  raiz == e = false
+l110 raiz > e =  false
+l113 raiz < e = true -> INGRESO AL SUBARBOL DERECHO
+*Ahora estoy en raiz 51, e = 51, tree.lft: NULL, tree.rgt: NULL
+l94  raiz == e = false
+l95  tree.lft y tree.rgt == NULL -> true
+l96  free(tree)
+l97  tree = NULL; entonces ahora ese nodo es NULL;
+
+===========================================================
+
+Estoy en raiz = 37, tree.lft: 7, tree.rgt: 55
+l133 max_e = 37
+l134 tree.lft ytree.rgt != NULL -> true
+l135 max_e = 37 max (tree.lft max tree.rgt)
+ 			A     max     B
+
+A: Estoy en raiz = 7, tree.lft: 5, tree.rgt: 12
+l133 max_e = 7
+l134 tree.lft ytree.rgt != NULL -> true
+l135 max_e = 7 max (tree.lft max tree.rgt)
+
+
+=============================================================
+Estoy en raiz 37, tree.lft: 7, tree.rgt: 55
+l133 max_e = raiz
+l134 tree.rgt != NULL ->true
+l135 max_e = 37 `max` abb_max(tree.rgt) => INGRESO AL SUBARBOL DERECHO
+*Ahora estoy en raiz 55, tree.lft:49, tre.rgt: 80
+l133 max_e = raiz
+l134 tree.rgt != NULL ->true
+l135 max_e = 55 `max` (abb_max(tree.rgt) => INGRESO AL SUBARBOL DERECHO
+*Ahora estoy en raiz 80, tree.lft:77, tre.rgt: 91
+l133 max_e = raiz
+l134 tree.rgt != NULL ->true
+l135 max_e = 80 `max` abb_max(tree.rgt) => INGRESO AL SUBARBOL DERECHO
+*Ahora estoy en raiz 91, tree.lft: NULL, tre.rgt: NULL
+l133 max_e = raiz = 91
+l134 tree.rgt != NULL ->false
+l138 return max_e
+*Ahora voy a raiz 80
+l135 max_e = 80 `max` 91
+*Ahora voy a raiz 55
+l135 max_e = 55 `max` (80 `max` 91)
+*Ahora voy a raiz 37
+l135 max_e = 37 `max` (55 `max` (80 `max` 91))
+*Aplico max
+l135 max_e = 91
+l138 return max_e (= 91) 
+
+========================================================
+
+Estoy en tree: RAIZ 37, tree.lft: 7, tree.rgt: 55
+l162  IF tree->left == NULL && tree->right == NULL  -> false
+l168  IF tree->left != NULL  -> true
+l169  tree = abb(tree->left)  => INGRESO AL SUBARBOL IZQUIERDO
+
+*Ahora estoy en tree: RAIZ 7, tree.lft: NULL, tree.rgt: 12
+l162  tree->left == NULL && tree->right == NULL  -> false
+l168  IF tree->left != NULL  -> false
+l171  IF tree->right != NULL  -> false
+l172  tree = abb_destroy(tree->right) => INGRESO AL SUBARBOL DERECHO
+
+*Ahora estoy en tree: RAIZ 12, tree.lft: NULL, tree.rgt: NULL
+l162  IF tree->left == NULL && tree->right == NULL  -> true
+l163     free(tree) {- Libero memoria -}
+l164     tree = NULL
+l176  return tree    {- Ahora voy a tree: raiz 7, linea 172 -}
+
+Entonces RAIZ 7
+l172  tree = NULL
+l176  return tree    {-Ahora voy a tree: raiz 37, linea 169 -}
+
+Entonce RAIZ 37
+l169  tree = NULL
+l176  return tree
+
+===============================================================
+          /7\
+    /4\         /15\    
+  /2\  5\    /10\   /18\  	
+ 1   3   6  8   12 16  22
+
+Estoy en tree: raiz 7, tree.lft = 4, tree.rgt = 15
+l33  tree == NULL -> false
+l36  tree->left != NULL && tree->right != NULL -> false
+l39  tree->left != NULL -> true
+l40  raiz > tree.lft.raiz -> true
+l41  res = invrep(tree.lft)
+*Ahora estoy en raiz 4, tree.lft = NULL, tree.rgt = NULL
+l33  tree == NULL -> false
+l36  tree->left != NULL && tree->right != NULL -> true
+l37  res = true
+l53 return res   {- ahora voy a la RAIZ 7, linea 41 -}
+
+entonces
+l41  res = invrep(tree.lft) --> res = true
+l53 return res
+
+
+
+l40  tree.rgt != NULL -> true
+
+
+==================================================================
+          /7\
+    /4\         /15\    
+  /2\  5\    /10\   /18\  	
+ 1   3   6  8   12 16  22
+------------------------------
+          7
+      n      n
+quiero agregar el 4:
+          7
+      4      n
+    2   5
+   n n n n
+
+
+abb abb_destroy(abb tree) {
+    assert(invrep(tree));
+    if(tree->left == NULL && tree->right == NULL){
+        free(tree);
+        tree = NULL;
+    }
+    else{
+        if(tree->left != NULL){
+            tree->left = abb_destroy(tree->left);
+            free(tree->left);
+            tree->left = NULL;
+        }
+        if(tree->right != NULL){
+            tree->right = abb_destroy(tree->right);
+            free(tree->right);
+            tree->right = NULL;
+        }
+    }
+    free(tree);
+    tree = NULL;
+    assert(tree == NULL);
+    return tree;
+}
+
+static bool invrep(abb tree) {
+    bool res;
+    if(tree == NULL){
+        res = true;
+    }
+    else if(tree->left == NULL && tree->right == NULL){
+        res = true;
+    }
+    else if(tree->left != NULL){
+        if(tree->elem > (tree->left)->elem){
+            res = invrep(tree->left);
+        }else{
+            res = false;
+        }
+    }
+    else if(tree->right != NULL){
+        if(tree->elem < (tree->right)->elem){
+            res = invrep(tree->right);
+        }else{
+            res = false;
+        }
+    }
+    return res;
+}
+
+
+
+
+
+

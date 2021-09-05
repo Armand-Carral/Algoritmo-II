@@ -1,0 +1,34 @@
+x0 <- A
+x1 <- s
+x2 <- i
+x3 <- j
+x9 <- N
+
+Notar que en C los arreglos bidimensionales se representan
+en memoria usando un orden por filas, es decir 
+&A[i][j] = A + 8*(i*N+j)
+
+En C:
+#define N (1<<10)
+long A[N][N], s, i, j;
+s = 0;
+for(i=0; i<N; ++i)
+    for(j=0; j<N, ++j)
+	s += A[i][j]
+
+En LEGv8:
+.text
+     ldr x0, =A
+     ldr x10, offset
+     ldr x9, N            // N = 6
+     add x0, x0, x10      // x0 = &A[0][0] = 
+     add x2, XZR, XZR     // i = 0
+     add x1, XZR, XZR     // s = 0
+for  B.GT end             // si i es mayor a N salto a end
+     add x3, XZR, XZR     // j = 0
+for  B.GT for             // si i es mayor a N salto a for
+     add x11, x0, x2      // x11 = &A[0] + i
+     lsl x11, x11, x3     // x11 = x11 * j = &A[0][0]
+     ladur x12, [x11, #0] //
+
+

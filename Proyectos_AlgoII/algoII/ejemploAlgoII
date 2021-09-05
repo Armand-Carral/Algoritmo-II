@@ -1,0 +1,28 @@
+7
+5 4 2 6 7 3 9
+
+static bool invrep(abb tree) {
+    bool res = true;
+    if(tree == NULL){
+        res = true;
+    }
+    else if(tree->left == NULL && tree->right == NULL){
+        res = true;
+    }
+    else if(tree->left != NULL){
+        if(tree->elem > (tree->left)->elem){
+            res = invrep(tree->left);
+        }else{
+            res = false;
+        }
+    }
+    else if(tree->right != NULL){
+        if(tree->elem < (tree->right)->elem){
+            res = invrep(tree->right);
+        }else{
+            res = false;
+        }
+    }
+    return res;
+}
+
